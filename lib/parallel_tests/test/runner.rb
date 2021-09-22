@@ -94,19 +94,21 @@ module ParallelTests
         end
 
         def execute_command_and_capture_output(env, cmd, options)
-          puts "\n\n options => #{options}: in execute_command_and_capture_output, env => #{env}, cmd => #{cmd}\n\n"
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: options => #{options}: in execute_command_and_capture_output, env => #{env}, cmd => #{cmd}\n\n"
           pid = nil
           output = IO.popen(env, cmd) do |io|
             pid = io.pid
             ParallelTests.pids.add(pid)
             capture_output(io, env, options)
           end
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: deleting pid: #{pid}\n\n"
           ParallelTests.pids.delete(pid) if pid
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: after deleting pid: #{pid}\n\n"
           exitstatus = $?.exitstatus
           seed = output[/seed (\d+)/, 1]
 
           output = [cmd, output].join("\n") if report_process_command?(options) && options[:serialize_stdout]
-          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_command_and_capture_outpu => exit_status => #{exitstatus}\n\n"
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: in execute_command_and_capture_outpu => exit_status => #{exitstatus}\n\n"
           { stdout: output, exit_status: exitstatus, command: cmd, seed: seed }
         end
 
@@ -159,7 +161,7 @@ module ParallelTests
         # read output of the process and print it in chunks
         def capture_output(out, env, options = {})
           result = +""
-          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in capture_output\n\n"
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: in capture_output\n\n"
           begin
             loop do
               read = out.readpartial(1000000) # read whatever chunk we can get
@@ -169,15 +171,17 @@ module ParallelTests
               result << read
               unless options[:serialize_stdout]
                 message = read
-                puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in capture_output loop => message => #{message} \n\n" 
+                puts "\n\n #{env["TEST_ENV_NUMBER"]}: in capture_output loop => message => #{message} \n\n" 
                 message = "[TEST GROUP #{env['TEST_ENV_NUMBER']}] #{message}" if options[:prefix_output_with_test_env_number]
                 $stdout.print message
                 $stdout.flush
               end
             end
           rescue EOFError
+            puts "\n\n #{env["TEST_ENV_NUMBER"]}: in capture_output EOFError \n\n" 
             nil
           end
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: in capture_output returning result => #{result} \n\n" 
           result
         end
 
