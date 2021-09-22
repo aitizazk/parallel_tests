@@ -86,7 +86,7 @@ module ParallelTests
       return unless ENV["TEST_ENV_NUMBER"]
       count = 0
       until number_of_running_processes <= 1
-        puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: wait_for_other_processes_to_finish sleeping 1 \n\n" if count % 10 = 0
+        puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: wait_for_other_processes_to_finish sleeping 1 \n\n" if count % 10 == 0
         count +=1
         sleep 1 
     end
