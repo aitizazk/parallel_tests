@@ -53,6 +53,7 @@ module ParallelTests
       # - do not use ' since run_in_parallel uses them to quote stuff
       # - simple system "set -o pipefail" returns nil even though set -o pipefail exists with 0
       def suppress_output(command, ignore_regex)
+        puts 'suppress_output'
         activate_pipefail = "set -o pipefail"
         remove_ignored_lines = %{(grep -v "#{ignore_regex}" || test 1)}
 
@@ -80,6 +81,7 @@ module ParallelTests
 
       # parallel:spec[:count, :pattern, :options, :pass_through]
       def parse_args(args)
+        puts 'parse_args'
         # order as given by user
         args = [args[:count], args[:pattern], args[:options], args[:pass_through]]
 
@@ -189,6 +191,7 @@ namespace :parallel do
 
   desc "Launch given rake command in parallel"
   task :rake, :command, :count do |_, args|
+    puts "\n\n rake \n\n"
     ParallelTests::Tasks.run_in_parallel(
       "RAILS_ENV=#{ParallelTests::Tasks.rails_env} #{ParallelTests::Tasks.rake_bin} " \
       "#{args.command}", args
@@ -198,6 +201,7 @@ namespace :parallel do
   ['test', 'spec', 'features', 'features-spinach'].each do |type|
     desc "Run #{type} in parallel with parallel:#{type}[num_cpus]"
     task type, [:count, :pattern, :options, :pass_through] do |_t, args|
+      puts "\n\n blablabla \n\n"
       ParallelTests::Tasks.check_for_pending_migrations
       ParallelTests::Tasks.load_lib
 

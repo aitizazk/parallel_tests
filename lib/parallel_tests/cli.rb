@@ -103,6 +103,7 @@ module ParallelTests
     end
 
     def run_tests(group, process_number, num_processes, options)
+      puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in run_tests, process_number => #{process_number}, num_processes => #{num_processes}\n\n"
       if group.empty?
         { stdout: '', exit_status: 0, command: '', seed: nil }
       else
