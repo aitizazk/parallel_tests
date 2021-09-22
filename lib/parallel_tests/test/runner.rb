@@ -76,6 +76,7 @@ module ParallelTests
         end
 
         def execute_command(cmd, process_number, num_processes, options)
+          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_command\n\n"
           env = (options[:env] || {}).merge(
             "TEST_ENV_NUMBER" => test_env_number(process_number, options).to_s,
             "PARALLEL_TEST_GROUPS" => num_processes.to_s,
@@ -83,13 +84,14 @@ module ParallelTests
           )
           cmd = "nice #{cmd}" if options[:nice]
           cmd = "#{cmd} 2>&1" if options[:combine_stderr]
-
+          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: before cmd puts #{cmd}\n\n"
           puts cmd if report_process_command?(options) && !options[:serialize_stdout]
 
           execute_command_and_capture_output(env, cmd, options)
         end
 
         def execute_command_and_capture_output(env, cmd, options)
+          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_command_and_capture_output\n\n"
           pid = nil
           output = IO.popen(env, cmd) do |io|
             pid = io.pid

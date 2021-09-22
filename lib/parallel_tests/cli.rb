@@ -17,12 +17,14 @@ module ParallelTests
 
       num_processes = ParallelTests.determine_number_of_processes(options[:count])
       num_processes *= (options[:multiply] || 1)
-
+      puts "\n\nnum_processes => #{num_processes}\n\n"
       options[:first_is_1] ||= first_is_1?
-
+      puts "\n\n options => #{options}\n\n"
       if options[:execute]
+        puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute\n\n"
         execute_shell_command_in_parallel(options[:execute], num_processes, options)
       else
+        puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute else \n\n"
         run_tests_in_parallel(num_processes, options)
       end
     end
@@ -349,6 +351,7 @@ module ParallelTests
     end
 
     def execute_shell_command_in_parallel(command, num_processes, options)
+      puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_shell_command_in_parallel\n\n"
       runs = if options[:only_group]
         options[:only_group].map { |g| g - 1 }
       else
@@ -357,11 +360,13 @@ module ParallelTests
       results = if options[:non_parallel]
         ParallelTests.with_pid_file do
           runs.map do |i|
+            puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in options non_parallel\n\n"
             ParallelTests::Test::Runner.execute_command(command, i, num_processes, options)
           end
         end
       else
         execute_in_parallel(runs, runs.size, options) do |i|
+          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_in_parallel\n\n"
           ParallelTests::Test::Runner.execute_command(command, i, num_processes, options)
         end
       end.flatten
@@ -398,10 +403,13 @@ module ParallelTests
 
     # CI systems often fail when there is no output for a long time, so simulate some output
     def simulate_output_for_ci(simulate)
+      puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in simulate_output_for_ci => #{simulate}\n\n"
       if simulate
         progress_indicator = Thread.new do
+          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: new thread progress_indicator\n\n"
           interval = Float(ENV.fetch('PARALLEL_TEST_HEARTBEAT_INTERVAL', 60))
           loop do
+            puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in loop sleep then print\n\n"
             sleep interval
             print '.'
           end
