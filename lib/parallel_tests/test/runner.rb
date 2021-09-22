@@ -171,7 +171,6 @@ module ParallelTests
               result << read
               unless options[:serialize_stdout]
                 message = read
-                puts "\n\n #{env["TEST_ENV_NUMBER"]}: in capture_output loop => message => #{message} \n\n" 
                 message = "[TEST GROUP #{env['TEST_ENV_NUMBER']}] #{message}" if options[:prefix_output_with_test_env_number]
                 $stdout.print message
                 $stdout.flush
