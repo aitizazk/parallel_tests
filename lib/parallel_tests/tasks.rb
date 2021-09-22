@@ -6,6 +6,7 @@ module ParallelTests
   module Tasks
     class << self
       def rails_env
+        puts 'setting env'
         'test'
       end
 
@@ -29,6 +30,7 @@ module ParallelTests
       end
 
       def run_in_parallel(cmd, options = {})
+        puts 'hello world'
         load_lib
         count = " -n #{options[:count]}" unless options[:count].to_s.empty?
         # Using the relative path to find the binary allow to run a specific version of it

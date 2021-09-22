@@ -8,6 +8,7 @@ require 'pathname'
 module ParallelTests
   class CLI
     def run(argv)
+      puts 'CLI run'
       Signal.trap("INT") { handle_interrupt }
 
       options = parse_options!(argv)
@@ -55,6 +56,7 @@ module ParallelTests
     end
 
     def run_tests_in_parallel(num_processes, options)
+      puts 'cli run in parallel'
       test_results = nil
 
       run_tests_proc = -> do
@@ -148,6 +150,7 @@ module ParallelTests
     end
 
     def report_number_of_tests(groups)
+      puts 'report tests'
       name = @runner.test_file_name
       num_processes = groups.size
       num_tests = groups.map(&:size).sum

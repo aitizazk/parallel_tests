@@ -14,6 +14,7 @@ module ParallelTests
 
   class << self
     def determine_number_of_processes(count)
+      puts 'determing count'
       [
         count,
         ENV["PARALLEL_TEST_PROCESSORS"],
@@ -39,6 +40,7 @@ module ParallelTests
     end
 
     def pid_file_path
+      puts 'checkin pid'
       ENV.fetch('PARALLEL_PID_FILE')
     end
 
