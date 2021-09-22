@@ -352,7 +352,7 @@ module ParallelTests
     end
 
     def execute_shell_command_in_parallel(command, num_processes, options)
-      puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_shell_command_in_parallel\n\n"
+      puts "\n\n #{options[:env]}: in execute_shell_command_in_parallel\n\n"
       runs = if options[:only_group]
         options[:only_group].map { |g| g - 1 }
       else
@@ -367,11 +367,11 @@ module ParallelTests
         end
       else
         execute_in_parallel(runs, runs.size, options) do |i|
-          puts "\n\n #{ENV["TEST_ENV_NUMBER"]}: in execute_in_parallel\n\n"
+          puts "\n\n #{options[:env]}: in execute_in_parallel\n\n"
           ParallelTests::Test::Runner.execute_command(command, i, num_processes, options)
         end
       end.flatten
-
+      puts "\n\n #{options[:env]}: in execute_in_parallel, near abort => #{results.any? { |r| r[:exit_status] != 0 }}, #{results.detect { |r| r[:exit_status] != 0 }}\n\n"
       abort if results.any? { |r| r[:exit_status] != 0 }
     end
 
