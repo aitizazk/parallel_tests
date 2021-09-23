@@ -48,7 +48,8 @@ module ParallelTests
     end
 
     def stop_all_processes
-      pids.all.each { |pid| Process.kill(:INT, pid) }
+      puts "in stop_all_processes killing all pids => #{pids}"
+      pids.all.each { |pid| puts "killing pid => #{pid}";Process.kill(:INT, pid);puts "killied pid => #{pid}"; }
     end
 
     # copied from http://github.com/carlhuda/bundler Bundler::SharedHelpers#find_gemfile

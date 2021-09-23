@@ -44,12 +44,18 @@ module ParallelTests
 
     def execute_in_parallel(items, num_processes, options)
       Tempfile.open 'parallel_tests-lock' do |lock|
+        puts "tempfile opened"
         ParallelTests.with_pid_file do
+          puts "with_pid_file opened"
           simulate_output_for_ci options[:serialize_stdout] do
+            puts "simulate_output_for_ci opened"
             Parallel.map(items, in_threads: num_processes) do |item|
+              puts "parallel map opened => #{item}"
               result = yield(item)
+              puts "#{options[:env]} result reutrned => #{result}"
               reprint_output(result, lock.path) if options[:serialize_stdout]
               ParallelTests.stop_all_processes if options[:fail_fast] && result[:exit_status] != 0
+              puts "#{options[:env]} before result return reutrned => #{result}"
               result
             end
           end
