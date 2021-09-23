@@ -109,7 +109,7 @@ module ParallelTests
 
           output = [cmd, output].join("\n") if report_process_command?(options) && options[:serialize_stdout]
           return_val = { stdout: output, exit_status: exitstatus, command: cmd, seed: seed }
-          puts "\n\n #{env["TEST_ENV_NUMBER"]}: in execute_command_and_capture_outpu => return_val => #{return_val}\n\n"
+          puts "\n\n #{env["TEST_ENV_NUMBER"]}: in execute_command_and_capture_outpu => exitstatus => #{exitstatus}\n\n"
           { stdout: output, exit_status: exitstatus, command: cmd, seed: seed }
         end
 
