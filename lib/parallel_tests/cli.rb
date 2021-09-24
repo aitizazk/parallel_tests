@@ -55,7 +55,7 @@ module ParallelTests
               puts "#{options[:env]} result reutrned"
               reprint_output(result, lock.path) if options[:serialize_stdout]
               ParallelTests.stop_all_processes if options[:fail_fast] && result[:exit_status] != 0
-              puts "#{options[:env]} before result return reutrned => #{result}"
+              puts "#{options[:env]} before result return reutrned => TOO BIG"
               result
             end
           end
